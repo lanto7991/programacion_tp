@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="css/style.css">
+    <title>Pixelcard</title>
+</head>
+
+</head>
+<body>
+    <div class="vista-juego">
+        <h1>Pixelcard</h1>
+        
+        <div class="health">
+            Computadora: <span id="vida-computadora"></span> vidas
+        </div>
+            
+        
+        <div class="mensaje" id="mensaje">Selecciona una carta para jugar</div>
+        
+        <div class="vista-cartas" id="cartas-jugador"></div>
+
+          <div id="cartaRival" class="opponent-card" style="justify-content: center;">
+            <div class="nombre-carta">Carta rival</div>
+            <div class="stats">
+                <span class="ataque">ATQ: <span id="ataque-computadora">0</span></span>
+                <span class="defensa">DEF: <span id="defensa-computadora">0</span></span>
+            </div>
+        </div>
+        
+        <div class="vida">
+            Jugador: <span id="vida-jugador">5</span> vidas
+        </div>
+        
+        <button id="boton-jugar" disabled>Jugar carta</button>
+        <button id="boton-reiniciar" style="display: none;">Jugar otra vez</button>
+
+        <div class="mazo-container">
+    <div id="mazo" class="mazo">Mazo:(<span id="contador-mazo">20</span>)</div>
+</div>
+<div class="vista-cartas" id="cartas-rival"></div>
+    </div>
+        
+    <script src = "js/propuestaTp.js"></script>
+</body>
+</html>
