@@ -1,5 +1,5 @@
-let vidaJugador = 100;
-let vidaComputadora = 100;
+let vidaJugador = 10;
+let vidaComputadora = 10;
 let cartasJugador = [];
 let cartasComputadora = [];
 let cartasSeleccionadas = null;
@@ -66,79 +66,113 @@ const mazoOriginalComputadora = [
     { name: "DEF 8", tipo: "defensa", valor: 3 },
     { name: "DEF 9", tipo: "defensa", valor: 5 }];
 
-function createCard(mazoFuente) {
-    if (mazoFuente.length === 0) return null;
-    const randomIndex = Math.floor(Math.random() * mazoFuente.length);
-    return mazoFuente.splice(randomIndex, 1)[0];
-}
-
-
-function startGame() {
-    cartasJugador = [];
-    cartasComputadora = [];
-    cartasSeleccionadas = null;
-    cartaRival = null;
-    gameOver = false;
-
-    mazoJugador = [...mazoOriginalJugador];
-    mazoComputadoraActual = [...mazoOriginalComputadora];
-
-    for (let i = 0; i < 3; i++) {
-        const nuevaCarta = createCard(mazoJugador);
-        if (nuevaCarta) cartasJugador.push(nuevaCarta);
-    }
-
-    updateGame();
-    botonJugar.disabled = true;
-    botonReiniciar.style.display = 'none';
-    cartaComputadoraEl.style.display = 'none';
-    mensajeEl.textContent = 'Selecciona una carta';
-}
-
-function updateGame() {
-    contadorMazoEl.textContent = `${mazoJugador.length + cartasJugador.length}`;
-    vidaJugadorEl.textContent = vidaJugador;
-    vidaComputadoraEl.textContent = vidaComputadora;
-    cartasJugadorEl.innerHTML = '';
-
-    cartasJugador.forEach((carta, index) => {
-        const cartaEl = document.createElement('div');
-        cartaEl.className = 'carta';
-        if (cartasSeleccionadas === index) {
-            cartaEl.classList.add('selected');
+    function createCard(mazoFuente, prioridad = null) {
+        if (mazoFuente.length === 0) return null;
+    
+        let mazoFiltrado = mazoFuente;
+    
+        if (prioridad) {
+            const preferidas = mazoFuente.filter(c => c.tipo === prioridad);
+            if (preferidas.length > 0) {
+                mazoFiltrado = preferidas;
+            }
         }
-        cartaEl.innerHTML = `
-            <div class="nombre-carta">${carta.name}</div>
-            <div class="stats">
-                <span class="${carta.tipo}">${carta.tipo.toUpperCase()}: ${carta.valor}</span>
-            </div>
-        `;
-        cartaEl.addEventListener('click', () => selectCard(index));
-        cartasJugadorEl.appendChild(cartaEl);
-    });
+    
+        const randomIndex = Math.floor(Math.random() * mazoFiltrado.length);
+        const cartaSeleccionada = mazoFiltrado[randomIndex];
+    
+        // Eliminar esa carta del mazo original (mazoFuente)
+        const indexEnMazo = mazoFuente.indexOf(cartaSeleccionada);
+        if (indexEnMazo !== -1) {
+            mazoFuente.splice(indexEnMazo, 1);
+        }
+    
+        return cartaSeleccionada;
+    }
 
-    if (vidaJugador <= 0 || vidaComputadora <= 0) {
-        gameOver = true;
+    function startGame() {
+        cartasJugador = [];
+        cartasComputadora = [];
+        cartasSeleccionadas = null;
+        cartaRival = null;
+        gameOver = false;
+    
+        mazoJugador = [...mazoOriginalJugador];
+        mazoComputadoraActual = [...mazoOriginalComputadora];
+    
+        for (let i = 0; i < 3; i++) {
+            const nuevaCarta = createCard(mazoJugador);
+            if (nuevaCarta) cartasJugador.push(nuevaCarta);
+        }
+    
+        // Resetear interfaz
+        mensajeEl.textContent = 'Selecciona una carta';
+        cartaComputadoraEl.style.display = 'none';
+        ataqueComputadoraEl.textContent = '';
+        defensaComputadoraEl.textContent = '';
+        cartasRivalEl.innerHTML = '';
+        botonJugar.disabled = true;
+        botonReiniciar.style.display = 'none';
+    
+        updateGame(); // Actualizar pantalla
+    }
+    
+    function updateGame() {
+        contadorMazoEl.textContent = `${mazoJugador.length + cartasJugador.length}`;
+        vidaJugadorEl.textContent = vidaJugador;
+        vidaComputadoraEl.textContent = vidaComputadora;
+        cartasJugadorEl.innerHTML = '';
 
-        if (vidaJugador == 0 && vidaComputadora == 0) {
-            mensajeEl.textContent = "Empate";
-        } else if (vidaComputadora <= 1) {
-            mensajeEl.textContent = "Victoria";
-        } else {
-            mensajeEl.textContent = "Derrota";
+        cartasJugador.forEach((carta, index) => {
+            const cartaEl = document.createElement('div');
+            cartaEl.className = 'carta';
+            if (cartasSeleccionadas === index) {
+                cartaEl.classList.add('selected');
+            }
+            cartaEl.innerHTML = `
+                <div class="nombre-carta">${carta.name}</div>
+                <div class="stats">
+                    <span class="${carta.tipo}">${carta.tipo.toUpperCase()}: ${carta.valor}</span>
+                </div>
+            `;
+            cartaEl.addEventListener('click', () => selectCard(index));
+            cartasJugadorEl.appendChild(cartaEl);
+        });
+
+        // Lógica de fin de juego por vida
+        if (vidaJugador <= 0 || vidaComputadora <= 0) {
+            gameOver = true;
+
+            if (vidaJugador <= 0 && vidaComputadora <= 0) {
+                mensajeEl.textContent = "Empate";
+            } else if (vidaComputadora <= 0) {
+                mensajeEl.textContent = "Victoria";
+            } else {
+                mensajeEl.textContent = "Derrota";
+            }
+
+            botonReiniciar.style.display = 'inline-block';
+            botonJugar.disabled = true;
+            return;
         }
 
-        botonReiniciar.style.display = 'inline-block';
-        botonJugar.disabled = true;
-    }
+        // Lógica de fin de juego por mazos vacíos
+        if (mazoJugador.length === 0 && cartasJugador.length === 0) {
+            gameOver = true;
+            mensajeEl.textContent = "Te quedaste sin cartas. Derrota.";
+            botonReiniciar.style.display = 'inline-block';
+            botonJugar.disabled = true;
+            return;
+        }
 
-    if (mazoJugador.length === 0 || cartasJugador.length === 0 || mazoComputadoraActual.length === 0) {
-        gameOver = true;
-        mensajeEl.textContent = "No quedan más cartas. Fin del juego.";
-        botonReiniciar.style.display = 'inline-block';
-        botonJugar.disabled = true;
+        if (mazoComputadoraActual.length === 0) {
+            gameOver = true;
+            mensajeEl.textContent = "El rival se quedó sin cartas. ¡Victoria!";
+            botonReiniciar.style.display = 'inline-block';
+            botonJugar.disabled = true;
+            return;
+        }
     }
-}
 
 function selectCard(index) {
     if (gameOver) return;
@@ -152,28 +186,16 @@ function playCard() {
     if (cartasSeleccionadas === null || gameOver) return;
 
     const cartaJugador = cartasJugador[cartasSeleccionadas];
-    const cartaRival = createCard(mazoComputadoraActual);
-
-    if (!cartaRival) {
-        mensajeEl.textContent = "El rival no tiene más cartas";
-        return;
-    }
-
-    ataqueComputadoraEl.textContent = cartaRival.tipo === "ataque" ? cartaRival.valor : 0;
-    defensaComputadoraEl.textContent = cartaRival.tipo === "defensa" ? cartaRival.valor : 0;
-    cartaComputadoraEl.style.display = 'flex';
-
     if (cartaJugador.tipo === "ataque") {
-        const dano = Math.max(0, cartaJugador.valor - (cartaRival.tipo === "defensa" ? cartaRival.valor : 0));
-        vidaComputadora -= dano;
-        mensajeEl.textContent = `¡${cartaJugador.name} hizo ${dano} de daño!`;
-    } else if (cartaJugador.tipo === "defensa") {
+        vidaComputadora -= cartaJugador.valor;
+        mensajeEl.textContent = `${cartaJugador.name} hizo ${cartaJugador.valor} de daño a la computadora.`;
+    } else if (cartaJugador.tipo === "defensa") 
         vidaJugador += cartaJugador.valor;
-        mensajeEl.textContent = `${cartaJugador.name} te protegió (+${cartaJugador.valor} vida)`;
-    }
+        mensajeEl.textContent = `${cartaJugador.name} te curó ${cartaJugador.valor} de vida.`;
+    
 
-    vidaComputadora = Math.max(0, vidaComputadora);
     vidaJugador = Math.max(0, vidaJugador);
+    vidaComputadora = Math.max(0, vidaComputadora);
 
     cartasJugador.splice(cartasSeleccionadas, 1);
     const nuevaCarta = createCard(mazoJugador);
@@ -182,22 +204,24 @@ function playCard() {
     cartasSeleccionadas = null;
     botonJugar.disabled = true;
     updateGame();
+
     setTimeout(turnoComputadora, 1000);
 }
 
 function turnoComputadora() {
     if (gameOver) return;
 
-    const cartaRival = createCard(mazoComputadoraActual);
+    const cartaRival = createCard(mazoComputadoraActual, "ataque");
+
     if (!cartaRival) {
-        mensajeEl.textContent += " | El rival no tiene más cartas";
+        mensajeEl.textContent += " | El rival no tiene más cartas.";
+        updateGame();
         return;
     }
 
     if (cartaRival.tipo === "ataque") {
-        const dano = cartaRival.valor;
-        vidaJugador -= dano;
-        mensajeEl.textContent += ` | El rival usó ${cartaRival.name} e hizo ${dano} de daño.`;
+        vidaJugador -= cartaRival.valor;
+        mensajeEl.textContent += ` | El rival usó ${cartaRival.name} e hizo ${cartaRival.valor} de daño.`;
     } else if (cartaRival.tipo === "defensa") {
         vidaComputadora += cartaRival.valor;
         mensajeEl.textContent += ` | El rival usó ${cartaRival.name} y se curó ${cartaRival.valor}.`;
@@ -208,6 +232,8 @@ function turnoComputadora() {
 
     updateGame();
 }
+
+
 botonJugar.addEventListener('click', playCard);
 botonReiniciar.addEventListener('click', startGame);
 window.addEventListener('DOMContentLoaded', startGame);
