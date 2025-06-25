@@ -5,13 +5,32 @@ body {
     margin: 0;
     padding: 20px;
 }
+
+html{
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  overflow: hidden;      
+}
+
+#canvas {
+  position: fixed;        
+  top: 0;
+  left: 0;
+  width: 100vw;          
+  height: 100vh;          
+  z-index: -1;             
+  pointer-events: none;    
+}
+
 .vista-juego {
-    max-width: 600px;
-    margin: 0 auto;
-    background-color: white;
-    padding: 20px;
-    border-radius: 10px;
-    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+  position: relative;      
+  z-index: 1;              
+  max-width: 960px;        
+  margin: 0 auto;          
+  padding: 20px;
+  color: #fff;            
+  text-align: center;
 }
 .vida {
     font-size: 24px;
@@ -28,6 +47,7 @@ body {
     width: 100px;
     height: 150px;
     background-color: white;
+    color: rgba(35, 35, 35, 0.839);
     border-radius: 8px;
     border: 2px solid #333;
     display: flex;
@@ -38,12 +58,10 @@ body {
     cursor: pointer;
 }
 .carta.seleccionada {
-    border: 3px solid gold;
-    box-shadow: 0 0 15px gold;
+    border: 3px solid rgb(0, 213, 255);
+    box-shadow: 0 0 15px rgb(0, 191, 255);
 }
-.cartaRival {
-    background-color: #f1f1f1;
-}
+
 .nombre-carta {
     font-weight: bold;
     border-bottom: 1px solid #ccc;
