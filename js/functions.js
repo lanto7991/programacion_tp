@@ -175,6 +175,11 @@ const mazoOriginalComputadora = [
             const nuevaCarta = createCard(mazoJugador);
             if (nuevaCarta) cartasJugador.push(nuevaCarta);
         }
+
+        for (let i = 0; i < 3; i++) {
+            const nuevaCartaRival = createCard(mazoComputadoraActual);
+            if (nuevaCartaRival) cartasComputadora.push(nuevaCartaRival);
+        }
     
         // Resetear interfaz
         mensajeEl.textContent = 'Selecciona una carta';
@@ -186,6 +191,11 @@ const mazoOriginalComputadora = [
         botonReiniciar.style.display = 'none';
     
         updateGame(); // Actualizar pantalla
+
+        for (let i = 0; i < 3; i++) {
+            const nuevaCartaRival = createCard(mazoComputadoraActual);
+            //if (nuevaCartaRival) cartasComputadora.push(nuevaCartaRival);
+        }
     }
     
     function updateGame() {
@@ -207,7 +217,21 @@ const mazoOriginalComputadora = [
                 </div>
             `;
             cartaEl.addEventListener('click', () => selectCard(index));
-            cartasJugadorEl.appendChild(cartaEl);
+            cartasJugadorEl.appendChild(cartaEl);  
+        });
+
+        cartasRivalEl.innerHTML = '';
+
+        cartasComputadora.forEach(() => {
+            const cartaOculta = document.createElement('div');
+            cartaOculta.classList.add('carta', 'carta-rival'); // Clase distinta para el CSS
+            cartaOculta.innerHTML = `
+                <div class="nombre-carta">???</div>
+                <div class="stats">
+                    <span>???</span>
+                </div>
+            `;
+            cartasRivalEl.appendChild(cartaOculta);
         });
 
         // Lógica de fin de juego por vida

@@ -93,3 +93,21 @@ button:disabled {
     border-radius: 5px;
     min-height: 50px;
 }
+
+.carta-rival {
+    background-color: #444;      /* Fondo oscuro */
+    color: transparent;          /* Oculta el texto real */
+    border: 2px solid #999;
+    position: relative;
+}
+
+.carta-rival::after {
+    content: "?";
+    color: white;
+    font-size: 1.5em;
+    font-weight: bold;
+    position: absolute;
+    top: 40%;
+    left: 45%;
+    transform: translate(-50%, -50%);
+}
