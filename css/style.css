@@ -44,8 +44,8 @@ html{
     flex-wrap: wrap;
 }
 .carta {
-    width: 100px;
-    height: 150px;
+    width: 150px;
+    height: 210px;
     background-color: white;
     color: rgba(35, 35, 35, 0.839);
     border-radius: 8px;
@@ -60,6 +60,8 @@ html{
 .carta.seleccionada {
     border: 3px solid rgb(0, 213, 255);
     box-shadow: 0 0 15px rgb(0, 191, 255);
+    transform: translateY(-30px) scale(1.05);
+    box-shadow: 0 0 15px #ff4081;
 }
 
 .nombre-carta {
@@ -87,6 +89,105 @@ button:disabled {
     background-color: #cccccc;
     cursor: not-allowed;
 }
+
+#video-fondo {
+  position: fixed;
+  top: 0;
+  left: 0;
+  min-width: 100%;
+  min-height: 100%;
+  z-index: -1;
+  object-fit: cover;
+  filter: brightness(0.5); /* Opcional: oscurece el fondo para mayor contraste */
+}
+
+.barra-juego-superior {
+  position: fixed;
+  top: 30px; /* espacio desde arriba */
+  left: 0;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  z-index: 10;
+  pointer-events: none; /* permite que no bloquee cosas si hace falta */
+}
+
+.contenedor-barra {
+  background: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(6px);
+  border-radius: 20px;
+  padding: 20px 30px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 90%; /* no llega a los bordes */
+  max-width: 1600px;
+  pointer-events: auto; /* vuelve a habilitar interacción solo en esta caja */
+  box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+  font-size: 1.5em;
+  gap: 20px;
+}
+
+.botones-barra {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+
+.botones-barra button {
+  padding: 10px 20px;
+  font-size: 1em;
+  border-radius: 12px;
+  background-color: #ff4081;
+  color: white;
+  border: none;
+  cursor: pointer;
+  transition: transform 0.2s ease, background-color 0.3s;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.4);
+}
+#titulo-enfrentamiento{
+  margin-top: 12.5%;
+}
+.botones-barra button:hover {
+  transform: scale(1.05);
+  background-color: #ff5b9f;
+}
+
+#boton-reiniciar {
+  opacity: 0;
+  transform: scale(0.9);
+  transition: opacity 0.4s ease, transform 0.3s ease;
+}
+
+#boton-reiniciar.mostrar {
+  display: inline-block !important;
+  opacity: 1;
+  transform: scale(1);
+}
+
+.contenedor-barra .vida,
+.contenedor-barra .mazo {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.contenedor-barra button {
+  padding: 10px 20px;
+  font-size: 1em;
+  border-radius: 12px;
+  background-color: #ff4081;
+  color: white;
+  border: none;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.4);
+}
+
+.contenedor-barra button:hover {
+  transform: scale(1.05);
+}
+
 .mensaje {
     margin: 20px 0;
     padding: 10px;
@@ -110,4 +211,150 @@ button:disabled {
     top: 40%;
     left: 45%;
     transform: translate(-50%, -50%);
+}
+
+.enemigo.bloqueado {
+    opacity: 0.4;
+    pointer-events: none;
+    filter: grayscale(1);
+}
+
+@keyframes resaltarCarta {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.1); }
+  100% { transform: scale(1); }
+}
+
+.carta.animada {
+  animation: resaltarCarta 0.3s ease;
+}
+
+
+.menu-principal {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(15, 15, 15, 0.95);
+  color: white;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  z-index: 10;
+}
+
+.menu-principal h1 {
+  font-size: 48px;
+  margin-bottom: 30px;
+}
+
+.menu-principal button {
+  padding: 15px 30px;
+  font-size: 20px;
+  background-color: #00bfff;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.menu-principal.fade-out {
+  animation: fadeOut 0.5s ease forwards;
+}
+
+.menu-principal input[type="text"] {
+  padding: 12px 20px;
+  font-size: 20px;
+  border: 2px solid #00bfff;
+  border-radius: 8px;
+  background-color: rgba(255, 255, 255, 0.1);
+  color: white;
+  margin-bottom: 30px;
+  width: 80%;
+  max-width: 300px;
+  box-shadow: 0 4px 15px rgba(0, 191, 255, 0.4);
+  transition: all 0.3s ease;
+}
+
+.menu-principal input[type="text"]::placeholder {
+  color: rgba(255, 255, 255, 0.7);
+  font-style: italic;
+}
+
+.menu-principal input[type="text"]:focus {
+  outline: none;
+  border-color: #00e0ff;
+  box-shadow: 0 4px 20px rgba(0, 191, 255, 0.6);
+  transform: scale(1.02);
+}
+
+@keyframes fadeOut {
+  to {
+    opacity: 0;
+    visibility: hidden;
+  }
+}
+
+/* Botones animados y divertidos */
+.botones-juego {
+    display: flex;
+    justify-content: center;
+    margin: 20px 0;
+    gap: 20px;
+}
+
+.botones-juego button {
+    padding: 12px 24px;
+    font-size: 1.2em;
+    font-weight: bold;
+    background: linear-gradient(45deg, #ff4081, #ff79b0);
+    border: none;
+    border-radius: 15px;
+    color: white;
+    cursor: pointer;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+    transition: all 0.2s ease-in-out;
+    animation: bounceIn 0.6s ease;
+}
+
+.botones-juego button:hover {
+    transform: scale(1.05);
+    background: linear-gradient(45deg, #ff79b0, #ff4081);
+}
+
+.botones-juego button:active {
+    transform: scale(0.95);
+}
+
+/* Vida y mazo con íconos */
+.barra-superior {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    font-size: 1.2em;
+    margin-bottom: 10px;
+}
+
+.barra-superior div {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    font-weight: bold;
+}
+
+/* Pequeña animación para los botones al cargar */
+@keyframes bounceIn {
+    0% {
+        opacity: 0;
+        transform: scale(0.5);
+    }
+    60% {
+        opacity: 1;
+        transform: scale(1.1);
+    }
+    100% {
+        transform: scale(1);
+    }
 }

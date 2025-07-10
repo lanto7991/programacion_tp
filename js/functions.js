@@ -7,6 +7,7 @@ let cartaRival = null;
 let gameOver = false;
 let mazoJugador = [];
 let mazoComputadoraActual = [];
+
 let canvas
 let ctx
 let imgEnemigo=new Image
@@ -137,6 +138,48 @@ const mazoOriginalComputadora = [
     { name: "DEF 8", tipo: "defensa", valor: 3 },
     { name: "DEF 9", tipo: "defensa", valor: 5 }];
 
+const ENEMIGOS_DISPONIBLES = [
+    {
+        id: 'tatu',
+        name: 'Tatu Carretera',
+        description: 'Un lento mamifero amante de las rutas.',
+        image: 'img/TatuCarreterafoto.png',
+        mazo: [...mazoOriginalComputadora],
+        vidaInicial: 10,
+        dificultad: 'Facil'
+    },    
+    {
+        id: 'tapir',
+        name: 'Tapir Cosmico',
+        description: 'Una bestia de la selva cosmica con gran poder.',
+        image: 'img/tapirofoto.png',
+        mazo: [...mazoOriginalComputadora],
+        vidaInicial: 15,
+        dificultad: 'Medio'
+    },
+    {
+        id: 'puma',
+        name: 'Es-Puma',
+        description: 'Una criatura veloz de gran poder fisico.',
+        image: 'img/pumafoto.png',
+        mazo: [...mazoOriginalComputadora],
+        vidaInicial: 20,
+        dificultad: 'Media'
+    },
+    
+    {
+        id: 'loboMarino',
+        name: 'Lobo Rey Mariano III',
+        description: 'Un ágil depredador acuático que ataca rápido.',
+        image: 'img/LoboMarino.png',
+        mazo: [...mazoOriginalComputadora],
+        vidaInicial: 30,
+        dificultad: 'Dificil'
+    }   
+];
+
+let enemigoActual = null;
+
     function createCard(mazoFuente, prioridad = null) {
         if (mazoFuente.length === 0) return null;
     
@@ -180,6 +223,25 @@ const mazoOriginalComputadora = [
             const nuevaCartaRival = createCard(mazoComputadoraActual);
             if (nuevaCartaRival) cartasComputadora.push(nuevaCartaRival);
         }
+
+        const enemigoId = localStorage.getItem('enemigoSeleccionadoId');
+        if (!enemigoId) {
+            window.location.href = "main_menu.html";
+            return;
+        }
+
+        enemigoActual = ENEMIGOS_DISPONIBLES.find(e => e.id === enemigoId);
+        if (!enemigoActual) {
+            window.location.href = "main_menu.html";
+            return;
+        }
+        vidaJugador = 10;
+        vidaComputadora = enemigoActual.vidaInicial;
+        const tituloEnfrentamientoEl = document.getElementById('titulo-enfrentamiento');
+        if (tituloEnfrentamientoEl) {
+            const nombreUsuario = localStorage.getItem("usuarioPixelcard") || "Jugador";
+            tituloEnfrentamientoEl.textContent = `${nombreUsuario} vs ${enemigoActual.name}`;
+        }
     
         // Resetear interfaz
         mensajeEl.textContent = 'Selecciona una carta';
@@ -188,14 +250,11 @@ const mazoOriginalComputadora = [
         defensaComputadoraEl.textContent = '';
         cartasRivalEl.innerHTML = '';
         botonJugar.disabled = true;
-        botonReiniciar.style.display = 'none';
+        botonReiniciar.classList.add('mostrar');
     
-        updateGame(); // Actualizar pantalla
+        updateGame();
 
-        for (let i = 0; i < 3; i++) {
-            const nuevaCartaRival = createCard(mazoComputadoraActual);
-            //if (nuevaCartaRival) cartasComputadora.push(nuevaCartaRival);
-        }
+       
     }
     
     function updateGame() {
@@ -208,7 +267,10 @@ const mazoOriginalComputadora = [
             const cartaEl = document.createElement('div');
             cartaEl.className = 'carta';
             if (cartasSeleccionadas === index) {
-                cartaEl.classList.add('selected');
+                cartaEl.classList.add('seleccionada', 'animada');
+                setTimeout(() => {
+                    cartaEl.classList.remove('animada');
+                }, 300); // mismo tiempo que la animación CSS
             }
             cartaEl.innerHTML = `
                 <div class="nombre-carta">${carta.name}</div>
@@ -242,6 +304,11 @@ const mazoOriginalComputadora = [
                 mensajeEl.textContent = "Empate";
             } else if (vidaComputadora <= 0) {
                 mensajeEl.textContent = "Victoria";
+                 const derrotados = JSON.parse(localStorage.getItem("enemigosDerrotados") || "[]");
+                if (!derrotados.includes(enemigoActual.id)) {
+                    derrotados.push(enemigoActual.id);
+                    localStorage.setItem("enemigosDerrotados", JSON.stringify(derrotados));
+                }
             } else {
                 mensajeEl.textContent = "Derrota";
             }
@@ -331,6 +398,62 @@ function turnoComputadora() {
 }
 
 
-botonJugar.addEventListener('click', playCard);
-botonReiniciar.addEventListener('click', startGame);
-window.addEventListener('DOMContentLoaded', startGame);
+    function calcularEnemigosDesbloqueados() {
+    const derrotados = JSON.parse(localStorage.getItem("enemigosDerrotados") || "[]");
+
+    const orden = ["tatu", "tapir", "puma", "loboMarino"];
+    const desbloqueados = [];
+
+        for (let i = 0; i < orden.length; i++) {
+            if (i === 0 || derrotados.includes(orden[i - 1])) {
+                desbloqueados.push(orden[i]);
+            } else {
+                break;
+            }
+        }
+
+        return desbloqueados;
+    }
+
+window.addEventListener('DOMContentLoaded', () => {
+    canvas = document.getElementById("canvas");
+    if (canvas) {
+        ctx = canvas.getContext("2d");
+        canvas.style.backgroundImage = "url('img/fondocombate.png')";
+    }
+
+    if (typeof audioSelectboton === 'undefined') {
+        audioSelectboton = new Audio('audios/select_boton.wav');
+        audioHovercarta = new Audio('audios/hover_carta.wav');
+    }
+
+
+    const botonComenzar = document.getElementById('boton-comenzar');
+    if (botonComenzar) {
+        const menuPrincipal = document.getElementById('menu-principal');
+        botonComenzar.addEventListener('click', () => {
+            const nombre = document.getElementById("nombre-usuario").value.trim();
+            if (nombre === "") {
+                alert("Por favor ingresá tu nombre.");
+                return;
+            }
+            localStorage.setItem("usuarioPixelcard", nombre);
+            audioSelectboton.play();
+            menuPrincipal.classList.add('fade-out');
+            setTimeout(() => {
+                window.location.href = "select_enemy.html";
+            }, 500);
+        });
+    }
+
+    const botonJugar = document.getElementById('boton-jugar');
+    const botonReiniciar = document.getElementById('boton-reiniciar');
+    if (botonJugar && botonReiniciar) {
+        botonJugar.addEventListener('click', playCard);
+        botonReiniciar.addEventListener('click', () => {
+            window.location.href = "select_enemy.html";
+        });
+    }
+
+    cargarEnemigosEnSelector(); // Para la página de selección
+});
