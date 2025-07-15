@@ -493,7 +493,9 @@ function turnoComputadora() {
         return desbloqueados;
     }
 
-window.addEventListener('DOMContentLoaded', () => {
+window.addEventListener('DOMContentLoaded', () => {    
+    const botonMenuPrincipal = document.getElementById('boton-menu-principal');
+    botonMenuPrincipal.classList.add('mostrar');
     canvas = document.getElementById("canvas");
     if (canvas) {
         ctx = canvas.getContext("2d");
@@ -526,12 +528,19 @@ window.addEventListener('DOMContentLoaded', () => {
 
     const botonJugar = document.getElementById('boton-jugar');
     const botonReiniciar = document.getElementById('boton-reiniciar');
-    if (botonJugar && botonReiniciar) {
+
+    if (botonJugar) {
         botonJugar.addEventListener('click', playCard);
+
         botonReiniciar.addEventListener('click', () => {
             window.location.href = "select_enemy.html";
         });
     }
+    if (botonMenuPrincipal) {
+  botonMenuPrincipal.addEventListener('click', () => {
+    window.location.href = "main_menu.html";
+  });
+}
 
     cargarEnemigosEnSelector(); // Para la página de selección
 });

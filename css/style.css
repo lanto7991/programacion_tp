@@ -162,6 +162,19 @@ button:disabled {
   transition: opacity 0.4s ease, transform 0.3s ease;
 }
 
+#boton-menu-principal {
+  background: none;
+  opacity: 0;
+  transform: scale(0.9);
+  transition: opacity 0.4s ease, transform 0.3s ease;
+}
+
+#boton-menu-principal.mostrar {
+  display: inline-block !important;
+  opacity: 1;
+  transform: scale(1);
+}
+
 #boton-reiniciar.mostrar {
   display: inline-block !important;
   opacity: 1;
