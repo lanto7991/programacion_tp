@@ -24,8 +24,7 @@ html{
 }
 
 .vista-juego {
-  position: relative;      
-  z-index: 1;              
+  position: relative;       
   max-width: 960px;        
   margin: 0 auto;          
   padding: 20px;
@@ -45,7 +44,7 @@ html{
 }
 .carta {
     width: 150px;
-    height: 210px;
+    height: 188px;
     background-color: white;
     color: rgba(35, 35, 35, 0.839);
     border-radius: 8px;
@@ -71,7 +70,7 @@ html{
 }
 .stats {
     display: flex;
-    justify-content: space-between;
+    justify-content: center;
 }
 .ataque { color: red; }
 .defensa { color: blue; }
@@ -91,25 +90,32 @@ button:disabled {
 }
 
 #video-fondo {
-  position: fixed;
+  position: absolute;
   top: 0;
   left: 0;
   min-width: 100%;
   min-height: 100%;
-  z-index: -1;
   object-fit: cover;
   filter: brightness(0.5); /* Opcional: oscurece el fondo para mayor contraste */
 }
 
 .barra-juego-superior {
-  position: fixed;
-  top: 30px; /* espacio desde arriba */
+  position: center;
   left: 0;
   width: 100%;
   display: flex;
   justify-content: center;
   z-index: 10;
   pointer-events: none; /* permite que no bloquee cosas si hace falta */
+}
+
+.botones_acciones{
+  position: center;
+  top: 30px; /* espacio desde arriba */
+  left: 0;
+  width: 100%;
+  display: flex;
+  justify-content: center;
 }
 
 .contenedor-barra {
@@ -125,7 +131,6 @@ button:disabled {
   pointer-events: auto; /* vuelve a habilitar interacción solo en esta caja */
   box-shadow: 0 4px 12px rgba(0,0,0,0.5);
   font-size: 1.5em;
-  gap: 20px;
 }
 
 .botones-barra {
@@ -144,10 +149,8 @@ button:disabled {
   cursor: pointer;
   transition: transform 0.2s ease, background-color 0.3s;
   box-shadow: 0 3px 10px rgba(0, 0, 0, 0.4);
-}
-#titulo-enfrentamiento{
-  margin-top: 12.5%;
-}
+} 
+
 .botones-barra button:hover {
   transform: scale(1.05);
   background-color: #ff5b9f;
@@ -196,18 +199,16 @@ button:disabled {
 }
 
 .carta-rival {
-    background-color: #444;      /* Fondo oscuro */
-    color: transparent;          /* Oculta el texto real */
+    background-image: url("../img/Carta_Dorso_xl.png");
     border: 2px solid #999;
     position: relative;
 }
 
 .carta-rival::after {
-    content: "?";
-    color: white;
+    background-image: url(".../img/Carta_Dorso_xl.png");
     font-size: 1.5em;
     font-weight: bold;
-    position: absolute;
+    position: center;
     top: 40%;
     left: 45%;
     transform: translate(-50%, -50%);
@@ -242,7 +243,6 @@ button:disabled {
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  z-index: 10;
 }
 
 .menu-principal h1 {
@@ -267,14 +267,14 @@ button:disabled {
 .menu-principal input[type="text"] {
   padding: 12px 20px;
   font-size: 20px;
-  border: 2px solid #00bfff;
+  border: 2px solid #f8b0dc;
   border-radius: 8px;
   background-color: rgba(255, 255, 255, 0.1);
   color: white;
   margin-bottom: 30px;
   width: 80%;
   max-width: 300px;
-  box-shadow: 0 4px 15px rgba(0, 191, 255, 0.4);
+  box-shadow: 0 4px 15px #f8b0dc;
   transition: all 0.3s ease;
 }
 
@@ -286,7 +286,7 @@ button:disabled {
 .menu-principal input[type="text"]:focus {
   outline: none;
   border-color: #00e0ff;
-  box-shadow: 0 4px 20px rgba(0, 191, 255, 0.6);
+  box-shadow: 0 4px 20px #f8b0dc;
   transform: scale(1.02);
 }
 
@@ -317,6 +317,22 @@ button:disabled {
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
     transition: all 0.2s ease-in-out;
     animation: bounceIn 0.6s ease;
+}
+
+#boton-jugar{
+  background: none !important;
+  position: relative;
+  z-index: 20 !important;
+  display: inline-block !important;
+  opacity: 1 !important;
+  transform: none !important;
+  color: white;
+  padding: 10px 20px;
+  border-radius: 10px;
+}
+
+#boton-reiniciar{
+  background: none !important;
 }
 
 .botones-juego button:hover {
@@ -357,4 +373,19 @@ button:disabled {
     100% {
         transform: scale(1);
     }
+}
+
+.fondo-video-container {
+  position: fixed;
+  width: 100% !important;
+  top: 0;
+  left: 0;
+  height: 100vh;
+  width: 100vw;
+  overflow: hidden;
+}
+
+#boton-comenzar
+{
+  background-color: #f8b0dc;
 }

@@ -7,9 +7,9 @@
     <title>1 vs 1 - Pixelcard</title>
 </head>
 <body>
-    <video autoplay muted loop id="video-fondo">
-    <source src="videos/hojas.mov" type="video/mov">
-    </video>
+    <div class="fondo-video-container">
+        <video id="video-fondo" autoplay muted loop></video>
+    </div>
 
     <canvas id="canvas" width="1920" height="1080"></canvas>
 
@@ -17,14 +17,10 @@
         
         <div class="barra-juego-superior">
         <div class="contenedor-barra">
-            <div class="vida jugador">🧡 <span id="vida-jugador">10</span></div>
-            <div class="mazo">🃏 <span id="contador-mazo">20</span></div>
-            <div class="vida enemigo">🤖 <span id="vida-computadora">10</span></div>
+            <div class="vida jugador"><img src="img/Corazon_Rojo_xl.png" style="width: 35%;"> <span id="vida-jugador">10</span></div>
+            <div class="mazo"><img src="img/Logo_cartas_xl.png" style="width: 35%;"> <span id="contador-mazo">20</span></div>
+            <div class="vida enemigo"><img src="img/Corazon_Azul_xl.png" style="width: 35%;"> <span id="vida-computadora">10</span></div>
 
-            <div class="botones-barra">
-            <button id="boton-jugar" disabled>Jugar Carta</button>
-            <button id="boton-reiniciar" style="display: none;">Elegir otro personaje</button>
-            </div>
         </div>
         </div>
         <h1 id="titulo-enfrentamiento">... vs PC</h1>
@@ -42,6 +38,11 @@
                 <span class="defensa">DEF: <span id="defensa-computadora">0</span></span>
             </div>
         </div>
+    </div>
+
+    <div class="botones_acciones">   
+        <button id="boton-jugar" disabled><img src="img/Boton_jugar_xl.png" style="width: 60%;"></button>
+        <button id="boton-reiniciar" style="display: none;"><img src="img/Boton_home_xl.png" style="width: 70%;"></button>
     </div>
 
     <script src="js/functions.js"></script>
