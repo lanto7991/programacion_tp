@@ -5,19 +5,62 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Pixelcard</title>
     <link rel="stylesheet" href="css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
 </head>
 <body>
   <div id="menu-principal" class="menu-principal" style="justify-content: center;">
     <h1><img src="img/Logo_juego_xl.png" style="width: 100%;"></h1>
     <input type="text" id="nombre-usuario" placeholder="Tu nombre" maxlength="12" style="padding: 10px; font-size: 18px; border-radius: 5px; margin-bottom: 20px;">
     <button id="boton-comenzar">Comenzar</button>
+    <a href="#" id="link-como-jugar" style="margin-top: 10px; display: inline-block; color: #00f; text-decoration: underline;">¿Cómo jugar?</a>
   </div>
 
   <canvas id="canvas" width="1920" height="1080"></canvas>
+
+  <div id="popup-como-jugar" class="popup" style="
+    position: absolute;
+    top: 60%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: rgba(0,0,0,0.9);
+    color: white;
+    padding: 20px;
+    border-radius: 10px;
+    width: 80%;
+    max-width: 600px;
+    z-index: 1000;
+    text-align: left;
+  ">
+    <h2>¿Cómo se juega?</h2>
+    <p>
+      1. Ingresá tu nombre y hacé clic en "Comenzar".<br>
+      2. Vas a recibir un mazo de cartas.<br>
+      3. Elegí una carta para enfrentar al enemigo.<br>
+      4. Ganás si eliminás a todos los enemigos.<br>
+      5. ¡Pensá tu estrategia, cada carta tiene habilidades distintas!
+    </p>
+    <button id="cerrar-popup" style="margin-top: 10px;">Cerrar</button>
+  </div>
 
   <div class="vista-juego">
   </div>
 
   <script src="js/functions.js"></script>
+
+  <script>
+    const popup = document.getElementById('popup-como-jugar');
+    const link = document.getElementById('link-como-jugar');
+    const cerrar = document.getElementById('cerrar-popup');
+
+    link.addEventListener('click', function (e) {
+      e.preventDefault();
+      popup.classList.add('mostrar');
+    });
+
+    cerrar.addEventListener('click', function () {
+      popup.classList.remove('mostrar');
+    });
+  </script>
+
 </body>
 </html>
