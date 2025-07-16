@@ -1,6 +1,6 @@
 let vidaJugador = 10;
 let vidaComputadora = 10;
-let defensaGeneral = 0; //para lógica de defensa
+let defensaGeneral = 0; 
 let cartasJugador = [];
 let cartasComputadora = [];
 let cartasSeleccionadas = null;
@@ -28,7 +28,6 @@ let audioWin
 let audioMusicamenu
 let audioMusicapelea
 
-/*Documentos por ID*/
 const vidaJugadorEl = document.getElementById('vida-jugador');
 const vidaComputadoraEl = document.getElementById('vida-computadora');
 const cartasJugadorEl = document.getElementById('cartas-jugador');
@@ -41,8 +40,8 @@ const mensajeEl = document.getElementById('mensaje');
 const cartasRivalEl = document.getElementById('cartas-rival');
 const mazoEl = document.getElementById('mazo');
 const contadorMazoEl = document.getElementById('contador-mazo');
+const botonMenuPrincipal = document.getElementById('boton-menu-principal');
 
-/*Audios para el juego*/
 audioHoverboton=new Audio();
 audioHoverboton.src="audios/hover_boton.wav";
 audioHovercarta=new Audio();
@@ -240,7 +239,6 @@ let enemigoActual = null;
         const randomIndex = Math.floor(Math.random() * mazoFiltrado.length);
         const cartaSeleccionada = mazoFiltrado[randomIndex];
     
-        // Eliminar esa carta del mazo original (mazoFuente)
         const indexEnMazo = mazoFuente.indexOf(cartaSeleccionada);
         if (indexEnMazo !== -1) {
             mazoFuente.splice(indexEnMazo, 1);
@@ -255,6 +253,7 @@ let enemigoActual = null;
         cartasSeleccionadas = null;
         cartaRival = null;
         gameOver = false;
+        botonMenuPrincipal.classList.add('mostrar');
         document.addEventListener('click',()=>{
             audioMusicapelea.play()
         })
@@ -301,7 +300,6 @@ let enemigoActual = null;
             tituloEnfrentamientoEl.textContent = `${nombreUsuario} vs ${enemigoActual.name}`;
         }
     
-        // Resetear interfaz
         mensajeEl.textContent = 'Selecciona una carta';
         cartaComputadoraEl.style.display = 'none';
         ataqueComputadoraEl.textContent = '';
@@ -342,7 +340,7 @@ let enemigoActual = null;
             if (!cartaEl.classList.contains('seleccionada')) {
                 audioHovercarta.currentTime = 0; 
                 audioHovercarta.play();
-            } //esto para el hover
+            } 
             
         });
                 cartasJugadorEl.appendChild(cartaEl);  
@@ -352,27 +350,29 @@ let enemigoActual = null;
 
         cartasComputadora.forEach(() => {
             const cartaOculta = document.createElement('div');
-            cartaOculta.classList.add('carta', 'carta-rival'); // Clase distinta para el CSS
+            cartaOculta.classList.add('carta', 'carta-rival'); 
             cartasRivalEl.appendChild(cartaOculta);
         });
 
-        // Lógica de fin de juego por vida
-                if (vidaJugador <= 0 || vidaComputadora <= 0) {
+        if (vidaJugador <= 0 || vidaComputadora <= 0) {
             gameOver = true;
 
             if (vidaJugador <= 0 && vidaComputadora <= 0) {
-                    mensajeEl.textContent = "Empate";
-        } else if (vidaComputadora <= 0) {
-                mensajeEl.textContent = "Victoria";
-                audioMusicapelea.pause();
-    
-    audioMuertepc.currentTime = 0; //agregué audio muertepc para cuando ganamos y puse un timeout de 2s para no solapar audio
-    audioMuertepc.play();
-    
-    setTimeout(() => {
-        audioWin.currentTime = 0;
-        audioWin.play();
-    }, 2000);
+        mensajeEl.textContent = "Empate";
+    } else if (vidaComputadora <= 0) {
+        mensajeEl.textContent = "Victoria";
+
+        audioMusicapelea.pause();
+        audioMusicapelea.currentTime = 0;
+        audioMusicapelea.loop = false;
+
+        audioMuertepc.currentTime = 0;
+        audioMuertepc.play();
+
+        setTimeout(() => {
+            audioWin.currentTime = 0;
+            audioWin.play();
+        }, 2000);
                  const derrotados = JSON.parse(localStorage.getItem("enemigosDerrotados") || "[]");
                 if (!derrotados.includes(enemigoActual.id)) {
                     derrotados.push(enemigoActual.id);
@@ -389,7 +389,6 @@ let enemigoActual = null;
             return;
         }
 
-        // Lógica de fin de juego por mazos vacíos
         if (mazoJugador.length === 0 && cartasJugador.length === 0) {
             gameOver = true;
             mensajeEl.textContent = "Te quedaste sin cartas. Derrota.";
@@ -494,8 +493,6 @@ function turnoComputadora() {
     }
 
 window.addEventListener('DOMContentLoaded', () => {    
-    const botonMenuPrincipal = document.getElementById('boton-menu-principal');
-    botonMenuPrincipal.classList.add('mostrar');
     canvas = document.getElementById("canvas");
     if (canvas) {
         ctx = canvas.getContext("2d");
@@ -508,7 +505,10 @@ window.addEventListener('DOMContentLoaded', () => {
     }
 
 
+    const botonJugar = document.getElementById('boton-jugar');
+    const botonReiniciar = document.getElementById('boton-reiniciar');
     const botonComenzar = document.getElementById('boton-comenzar');
+
     if (botonComenzar) {
         const menuPrincipal = document.getElementById('menu-principal');
         botonComenzar.addEventListener('click', () => {
@@ -526,8 +526,6 @@ window.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    const botonJugar = document.getElementById('boton-jugar');
-    const botonReiniciar = document.getElementById('boton-reiniciar');
 
     if (botonJugar) {
         botonJugar.addEventListener('click', playCard);
@@ -542,5 +540,5 @@ window.addEventListener('DOMContentLoaded', () => {
   });
 }
 
-    cargarEnemigosEnSelector(); // Para la página de selección
+    cargarEnemigosEnSelector();
 });
